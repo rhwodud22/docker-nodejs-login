@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <!--jQuery 불러오기-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <h3>모든 유저 정보</h3>
+    <table>
+        <table border="1">
+            <th>순번</th>
+            <th>아이디</th>
+            <th>비밀번호</th>
+            <th>비밀번호 변경</th>
+            <th>확인</th>
+            <% users.forEach(function(val){ %>
+            <tr>
+                <td><%= val.id%></td>
+                <td><%= val.user_id %></td>
+                <td><%= val.user_pw %></td>
+                <td><input type="text" /></td>
+                <td><input type="button" class="CHANGE_PW" value="변경" /></td>
+            </tr>
+            <% }) %>
+        </table>
+        <script>
+            $(".CHANGE_PW").click(function () {
+
+                var checkBtn = $(this);
+
+                var tr = checkBtn.parent().parent();
+                var td = tr.children();
+
+                var userno = td.eq(0).text();
+                var userid = td.eq(1).text();
+                var userpw = td.eq(2).text();
+                var chagepw = td.eq(3).children().eq(0).val();
+
+                $.ajax({
+                    url: '/change_pw',
+                    async: true,
+                    type: 'POST',
+                    data: {
+                        new_pw1: chagepw,
+                        user_no: userno
+                    },
+                    dataType: 'json',
+                    success: function (res) {
+                        var msg  = res.message;
+                        var user = res.data;
+                        alert("비밀번호가 수정되었습니다.");
+                        td.eq(2).text(user.user_pw); // 수정한 비밀번호로 값 바꾸기
+                        td.eq(3).children().eq(0).val(""); // text창 초기화 
+                    },
+                    error: function (error) {
+                        console.err(error);
+                    }
+                });
+            });
+        </script>
+</body>
+
+</html>
