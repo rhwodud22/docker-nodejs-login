@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  maria:
+    image: mariadb:latest
+    container_name: "mariadb"
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - MYSQL_ROOT_PASSWORD=jae02
+      # - MYSQL_USER=user1
+      # - MYSQL_PASSWORD=password1
+      - MYSQL_DATABASE=user_info
+    build:
+      context: .
+      # dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
+    volumes:
+      # - ./:/usr/src/app
+      - ./:/app
+      # - /usr/src/app/node_modules # Remove this if you have pure JS dependencies
+    restart: always
+    ports:
+      - "3000:3000"
+    links:
+      - mysql
+    depends_on:
+      - mysql 
